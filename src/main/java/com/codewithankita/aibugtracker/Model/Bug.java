@@ -10,7 +10,6 @@ import java.util.UUID;
 @Table(name = "bugs")
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Bug {
 
