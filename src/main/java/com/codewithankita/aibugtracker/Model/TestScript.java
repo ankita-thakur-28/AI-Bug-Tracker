@@ -7,8 +7,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "test_scripts")
 @Getter @Setter
-@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class TestScript {
 
     @Id
