@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/signup",
+                                "/api/auth/hash",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
@@ -46,5 +49,14 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // Prevents Spring Boot from registering JwtAuthFilter as a servlet filter
+    // separately from the security chain — fixes double-registration issue
+    @Bean
+    public FilterRegistrationBean<JwtAuthFilter> jwtFilterRegistration(JwtAuthFilter filter) {
+        FilterRegistrationBean<JwtAuthFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 }
