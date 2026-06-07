@@ -24,9 +24,6 @@ public class AiService {
     @Value("${app.ai.api-key}")
     private String apiKey;
 
-    @Value("${app.ai.model}")
-    private String model;
-
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -35,22 +32,21 @@ public class AiService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-api-key", apiKey);
-        headers.set("anthropic-version", "2023-06-01");
 
         Map<String, Object> body = Map.of(
-                "model", model,
-                "max_tokens", 1024,
-                "messages", List.of(
-                        Map.of("role", "user", "content", prompt)
+                "contents", List.of(
+                        Map.of("parts", List.of(
+                                Map.of("text", prompt)
+                        ))
                 )
         );
 
+        String urlWithKey = providerUrl + "?key=" + apiKey;
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
-                    providerUrl,
+                    urlWithKey,
                     HttpMethod.POST,
                     entity,
                     String.class
@@ -59,7 +55,7 @@ public class AiService {
             return extractCode(response.getBody());
 
         } catch (Exception e) {
-            log.error("AI API call failed: {}", e.getMessage());
+            log.error("Gemini API call failed: {}", e.getMessage());
             throw new RuntimeException("AI generation failed: " + e.getMessage());
         }
     }
@@ -92,7 +88,10 @@ public class AiService {
         try {
             JsonNode root = objectMapper.readTree(responseBody);
             String content = root
+                    .path("candidates")
+                    .get(0)
                     .path("content")
+                    .path("parts")
                     .get(0)
                     .path("text")
                     .asText();
@@ -105,7 +104,7 @@ public class AiService {
             return content.trim();
 
         } catch (Exception e) {
-            log.error("Failed to parse AI response: {}", e.getMessage());
+            log.error("Failed to parse Gemini response: {}", e.getMessage());
             throw new RuntimeException("Failed to parse AI response");
         }
     }

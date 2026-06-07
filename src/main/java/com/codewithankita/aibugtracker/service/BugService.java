@@ -9,6 +9,9 @@ import com.codewithankita.aibugtracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.codewithankita.aibugtracker.Model.TestScript;
+import com.codewithankita.aibugtracker.Model.TestScriptStatus;
+import com.codewithankita.aibugtracker.repository.TestScriptRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +22,8 @@ public class BugService {
 
     private final BugRepository bugRepository;
     private final UserRepository userRepository;
+    private final TestScriptRepository testScriptRepository;
+    private final AsyncAiService asyncAiService;
 
     public BugResponse createBug(BugRequest request) {
         String email = SecurityContextHolder.getContext()
@@ -42,8 +47,18 @@ public class BugService {
                 .assignedTo(assignedTo)
                 .createdBy(createdBy)
                 .build();
-
         Bug saved = bugRepository.save(bug);
+
+// Create TestScript with PENDING status immediately
+        TestScript testScript = TestScript.builder()
+                .bug(saved)
+                .status(TestScriptStatus.PENDING)
+                .build();
+        TestScript savedScript = testScriptRepository.save(testScript);
+
+// Trigger AI generation asynchronously — bug returns 201 instantly
+        asyncAiService.generateAndSaveScript(saved, savedScript);
+
         return mapToResponse(saved);
     }
 
