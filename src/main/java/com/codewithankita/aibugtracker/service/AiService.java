@@ -24,6 +24,12 @@ public class AiService {
     @Value("${app.ai.api-key}")
     private String apiKey;
 
+    @Value("${app.ai.model}")
+    private String model;
+
+    @Value("${app.ai.temperature}")
+    private double temperature;
+
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -35,11 +41,11 @@ public class AiService {
         headers.setBearerAuth(apiKey);
 
         Map<String, Object> body = Map.of(
-                "model", "deepseek-v4-pro",
+                "model", model,
                 "messages", List.of(
                         Map.of("role", "user", "content", prompt)
                 ),
-                "temperature", 0.3
+                "temperature", temperature
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);

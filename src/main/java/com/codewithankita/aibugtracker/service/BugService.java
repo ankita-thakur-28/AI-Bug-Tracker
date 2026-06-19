@@ -24,6 +24,7 @@ public class BugService {
     private final UserRepository userRepository;
     private final TestScriptRepository testScriptRepository;
     private final AsyncAiService asyncAiService;
+    private final AsyncEmailService asyncEmailService;
 
     public BugResponse createBug(BugRequest request) {
         String email = SecurityContextHolder.getContext()
@@ -58,6 +59,9 @@ public class BugService {
 
 // Trigger AI generation asynchronously — bug returns 201 instantly
         asyncAiService.generateAndSaveScript(saved, savedScript);
+
+// Notify assigned developer via email
+        asyncEmailService.sendBugCreatedEmail(saved, assignedTo);
 
         return mapToResponse(saved);
     }
@@ -97,7 +101,11 @@ public class BugService {
         bug.setSeverity(request.getSeverity());
         bug.setAssignedTo(assignedTo);
 
-        return mapToResponse(bugRepository.save(bug));
+        BugResponse response = mapToResponse(bugRepository.save(bug));
+
+        asyncEmailService.sendBugUpdatedEmail(bug, assignedTo, bug.getCreatedBy());
+
+        return response;
     }
 
     public void deleteBug(UUID id) {
@@ -109,8 +117,18 @@ public class BugService {
     public BugResponse updateStatus(UUID id, BugStatus newStatus) {
         Bug bug = bugRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bug not found with id: " + id));
+
+        String oldStatus = bug.getStatus().name();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User changedBy = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         bug.setStatus(newStatus);
-        return mapToResponse(bugRepository.save(bug));
+        BugResponse response = mapToResponse(bugRepository.save(bug));
+
+        asyncEmailService.sendStatusChangedEmail(bug, changedBy, oldStatus);
+
+        return response;
     }
 
     public BugResponse cancelBug(UUID id, String currentUserEmail) {
@@ -122,7 +140,11 @@ public class BugService {
         }
 
         bug.setStatus(BugStatus.WITHDRAWN);
-        return mapToResponse(bugRepository.save(bug));
+        BugResponse response = mapToResponse(bugRepository.save(bug));
+
+        asyncEmailService.sendBugWithdrawnEmail(bug, bug.getAssignedTo());
+
+        return response;
     }
 
     private BugResponse mapToResponse(Bug bug) {

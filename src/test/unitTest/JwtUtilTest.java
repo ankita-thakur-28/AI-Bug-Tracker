@@ -1,11 +1,10 @@
 package com.codewithankita.aibugtracker.unitTest;
+
 import com.codewithankita.aibugtracker.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JwtUtilTest {

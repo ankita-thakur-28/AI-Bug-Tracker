@@ -16,6 +16,7 @@ public class AsyncAiService {
 
     private final AiService aiService;
     private final TestScriptRepository testScriptRepository;
+    private final PlaywrightRunnerService playwrightRunnerService;
 
     @Async("taskExecutor")
     public void generateAndSaveScript(Bug bug, TestScript testScript) {
@@ -28,7 +29,8 @@ public class AsyncAiService {
             testScript.setStatus(TestScriptStatus.PENDING);
             testScriptRepository.save(testScript);
 
-            log.info("AI generation complete for bug: {}", bug.getId());
+            log.info("AI generation complete for bug: {}, executing test", bug.getId());
+            playwrightRunnerService.runTest(testScript);
 
         } catch (Exception e) {
             log.error("AI generation failed for bug: {}", bug.getId(), e);
