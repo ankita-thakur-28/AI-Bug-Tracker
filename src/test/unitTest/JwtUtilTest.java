@@ -55,4 +55,26 @@ class JwtUtilTest {
     void isTokenValid_shouldReturnFalseForEmptyToken() {
         assertFalse(jwtUtil.isTokenValid(""));
     }
+
+    @Test
+    void isTokenValid_shouldReturnFalseForRandomString() {
+        assertFalse(jwtUtil.isTokenValid("eyJhbGciOiJIUzI1NiJ9.random"));
+    }
+
+    @Test
+    void isTokenValid_shouldReturnFalseForDifferentSecret() {
+        String token = jwtUtil.generateToken("test@test.com", "ADMIN");
+
+        JwtUtil otherJwt = new JwtUtil();
+        ReflectionTestUtils.setField(otherJwt, "jwtSecret",
+                "different_secret_key_that_is_not_the_same_as_original_256");
+        ReflectionTestUtils.setField(otherJwt, "jwtExpirationMs", 86400000L);
+
+        assertFalse(otherJwt.isTokenValid(token));
+    }
+
+    @Test
+    void extractEmail_shouldThrowForInvalidToken() {
+        assertThrows(Exception.class, () -> jwtUtil.extractEmail("invalid.token.here"));
+    }
 }
