@@ -1,0 +1,26 @@
+.topbar {
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  min-height: 68px;
+}
+
+.title { font-size: 18px; font-weight: 600; }
+
+.actions { display: flex; align-items: center; gap: 14px; }
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+}

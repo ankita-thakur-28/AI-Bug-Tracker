@@ -1,34 +1,50 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './routes/ProtectedRoute';
-import RoleRoute from './routes/RoleRoute';
+import { ToastProvider } from './components/common/Toast';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Forbidden from './pages/Forbidden';
 
-function DashboardRouter() {
-  const { user } = useAuth();
+function SimpleAdmin() {
+  return (
+    <div style={{padding:40,color:'white',fontFamily:'sans-serif'}}>
+      <h1>Admin Dashboard</h1>
+      <p>If you see this, routing and auth work correctly.</p>
+    </div>
+  );
+}
 
-  if (!user) return <Navigate to="/login" replace />;
+function SimpleDev() {
+  return <div style={{padding:40,color:'white'}}><h1>Developer Dashboard</h1></div>;
+}
 
-  if (user.role === 'ADMIN') {
-    return <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>Admin Dashboard — coming in Phase 3</div>;
-  }
-  if (user.role === 'DEVELOPER') {
-    return <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>Developer Dashboard — coming in Phase 4</div>;
-  }
-  if (user.role === 'TESTER') {
-    return <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>Tester Dashboard — coming in Phase 5</div>;
-  }
-
-  return <Navigate to="/login" replace />;
+function SimpleTester() {
+  return <div style={{padding:40,color:'white'}}><h1>Tester Dashboard</h1></div>;
 }
 
 function AppRoutes() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/" element={<ProtectedRoute><DashboardRouter /></ProtectedRoute>} />
+      <Route path="/" element={
+        user.role === 'ADMIN' ? <SimpleAdmin /> :
+        user.role === 'DEVELOPER' ? <SimpleDev /> :
+        user.role === 'TESTER' ? <SimpleTester /> :
+        <Navigate to="/login" replace />
+      } />
+      <Route path="/forbidden" element={<Forbidden />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -36,8 +52,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider>
+          <AppRoutes />
+        </ToastProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

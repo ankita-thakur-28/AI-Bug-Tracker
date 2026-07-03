@@ -1,0 +1,57 @@
+.wrap { width: 100%; }
+
+.toolbar {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.count { font-size: 14px; color: var(--text-secondary); }
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.tableWrap table { width: 100%; border-collapse: collapse; }
+
+.tableWrap th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tableWrap td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tableWrap tr:last-child td { border-bottom: none; }
+.tableWrap tr:hover td { background: var(--bg-card-hover); }
+
+.nameCell { font-weight: 500; }
+
+.actions { display: flex; gap: 6px; }
+
+.actions button {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 14px;
+}
+
+.actions button:hover:not(:disabled) { background: var(--bg-card-hover); color: var(--text-primary); }
+.actions button:disabled { opacity: 0.3; cursor: not-allowed; }
+.danger:hover:not(:disabled) { background: rgba(248, 113, 113, 0.1); color: #f87171; }

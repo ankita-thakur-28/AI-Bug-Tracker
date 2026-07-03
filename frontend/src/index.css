@@ -42,3 +42,31 @@ a {
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
 ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+
+/* Badge styles */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.sev-critical { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+.sev-high { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+.sev-medium { background: rgba(250, 204, 21, 0.15); color: #facc15; }
+.sev-low { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+
+.status-open { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.status-in_progress { background: rgba(124, 108, 248, 0.15); color: #7c6cf8; }
+.status-resolved { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+.status-closed { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+.status-withdrawn { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+
+.role-admin { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+.role-developer { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.role-tester { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
