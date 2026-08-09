@@ -22,6 +22,5 @@ public class BugRequest {
     @NotNull(message = "Severity is required")
     private Severity severity;
 
-    @NotNull(message = "Assigned developer is required")
     private UUID assignedToId;
 }

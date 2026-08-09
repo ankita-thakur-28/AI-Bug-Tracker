@@ -25,6 +25,7 @@ public class BugService {
     private final TestScriptRepository testScriptRepository;
     private final AsyncAiService asyncAiService;
     private final AsyncEmailService asyncEmailService;
+    private final AiService aiService;
 
     public BugResponse createBug(BugRequest request) {
         String email = SecurityContextHolder.getContext()
@@ -33,11 +34,23 @@ public class BugService {
         User createdBy = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        User assignedTo = userRepository.findById(request.getAssignedToId())
-                .orElseThrow(() -> new ResourceNotFoundException("Developer not found"));
-
-        if (assignedTo.getRole() != Role.DEVELOPER) {
-            throw new RuntimeException("Bug can only be assigned to a Developer");
+        User assignedTo;
+        if (request.getAssignedToId() == null) {
+            List<User> developers = userRepository.findAll().stream()
+                    .filter(u -> u.getRole() == Role.DEVELOPER)
+                    .toList();
+            if (developers.isEmpty()) {
+                throw new RuntimeException("No developers available for auto-assignment");
+            }
+            UUID assignedId = aiService.recommendDeveloper(request.getTitle(), request.getDescription(), developers);
+            assignedTo = userRepository.findById(assignedId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Recommended developer not found"));
+        } else {
+            assignedTo = userRepository.findById(request.getAssignedToId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Developer not found"));
+            if (assignedTo.getRole() != Role.DEVELOPER) {
+                throw new RuntimeException("Bug can only be assigned to a Developer");
+            }
         }
 
         Bug bug = Bug.builder()
@@ -89,11 +102,23 @@ public class BugService {
         Bug bug = bugRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bug not found with id: " + id));
 
-        User assignedTo = userRepository.findById(request.getAssignedToId())
-                .orElseThrow(() -> new ResourceNotFoundException("Developer not found"));
-
-        if (assignedTo.getRole() != Role.DEVELOPER) {
-            throw new RuntimeException("Bug can only be assigned to a Developer");
+        User assignedTo;
+        if (request.getAssignedToId() == null) {
+            List<User> developers = userRepository.findAll().stream()
+                    .filter(u -> u.getRole() == Role.DEVELOPER)
+                    .toList();
+            if (developers.isEmpty()) {
+                throw new RuntimeException("No developers available for auto-assignment");
+            }
+            UUID assignedId = aiService.recommendDeveloper(request.getTitle(), request.getDescription(), developers);
+            assignedTo = userRepository.findById(assignedId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Recommended developer not found"));
+        } else {
+            assignedTo = userRepository.findById(request.getAssignedToId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Developer not found"));
+            if (assignedTo.getRole() != Role.DEVELOPER) {
+                throw new RuntimeException("Bug can only be assigned to a Developer");
+            }
         }
 
         bug.setTitle(request.getTitle());

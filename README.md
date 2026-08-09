@@ -1,4 +1,4 @@
-# AI-Powered Bug Tracker
+# AI-Bug Tracker
 
 Full-stack bug tracking system with AI-generated Playwright test scripts.
 
@@ -50,7 +50,23 @@ npx playwright --version
 
 Server starts at `http://localhost:8080`.
 
-### 5. Run Tests
+### 5. Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:3000` (or next available port e.g. `http://localhost:3002`).
+
+### 6. Run via Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+### 7. Run Unit Tests
 
 ```bash
 ./mvnw test
@@ -78,13 +94,13 @@ Server starts at `http://localhost:8080`.
 
 ## Sprint Status
 
-| Sprint | Status |
-|--------|--------|
-| S1 Foundation & Auth | ✅ Done |
-| S2 Bug CRUD APIs | ✅ Done |
-| S3 User Management APIs | ✅ Done |
-| S4 AI Integration | ✅ Done |
-| S5 Playwright Test Runner | 🏗️ In Progress |
-| S6 Email Notifications | ⬜ |
-| S7 Testing & Hardening | ⬜ |
-| S8–S12 Frontend | ⬜ |
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| S1 | Foundation & JWT Authentication | ✅ Done |
+| S2 | Bug CRUD APIs & Scoping | ✅ Done |
+| S3 | User Management APIs | ✅ Done |
+| S4 | AI DeepSeek Integration | ✅ Done |
+| S5 | Playwright Test Execution Service | ✅ Done |
+| S6 | Email Notifications (Brevo API) | ✅ Done |
+| S7 | Unit Testing & Hardening | ✅ Done |
+| S8–S12 | React Vite Frontend & Role Dashboards | ✅ Done |

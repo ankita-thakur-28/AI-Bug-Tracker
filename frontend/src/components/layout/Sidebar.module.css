@@ -67,9 +67,10 @@
 .navItem:hover { background: var(--bg-card); color: var(--text-primary); }
 
 .active {
-  background: rgba(124, 108, 248, 0.15);
-  color: var(--accent-purple);
-  border: 1px solid rgba(124, 108, 248, 0.15);
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+  font-weight: 600;
 }
 
 .logout {

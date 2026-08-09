@@ -26,7 +26,7 @@ export default function Login() {
       <div className={styles.authBox}>
         <div className={styles.logo}>
           <div className={styles.logoIcon}><i className="fas fa-bug"></i></div>
-          <h1>BugTracker <span>AI</span></h1>
+          <h1>AI-Bug Tracker</h1>
         </div>
         <p className={styles.subtitle}>Sign in to your account</p>
         <form onSubmit={handleSubmit}>

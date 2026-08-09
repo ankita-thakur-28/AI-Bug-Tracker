@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { getBugs, cancelBug } from '../../services/bugs';
 import { useToast } from '../../hooks/useToast';
 import Loader from '../common/Loader';
+import BugDetailModal from '../developer/BugDetailModal';
 import styles from './MyBugsList.module.css';
 
 export default function MyBugsList() {
   const [bugs, setBugs] = useState([]);
+  const [selectedBug, setSelectedBug] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const { showToast } = useToast();
@@ -78,7 +80,9 @@ export default function MyBugsList() {
                 <td>{new Date(b.createdAt).toLocaleDateString()}</td>
                 <td>
                   <div className={styles.actions}>
-                    <button className={styles.viewBtn} title="View"><i className="fas fa-eye"></i></button>
+                    <button className={styles.viewBtn} onClick={() => setSelectedBug(b)} title="View Bug & AI Script">
+                      <i className="fas fa-eye"></i>
+                    </button>
                     {b.status !== 'RESOLVED' && b.status !== 'CLOSED' && b.status !== 'WITHDRAWN' && (
                       <button className={styles.cancelBtn} onClick={() => handleCancel(b.id, b.title)} title="Cancel">
                         <i className="fas fa-ban"></i>
@@ -94,6 +98,9 @@ export default function MyBugsList() {
           </tbody>
         </table>
       </div>
+      {selectedBug && (
+        <BugDetailModal bug={selectedBug} onClose={() => setSelectedBug(null)} />
+      )}
     </div>
   );
 }

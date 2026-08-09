@@ -9,7 +9,7 @@ export default function SubmitBugModal({ onClose }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [severity, setSeverity] = useState('HIGH');
-  const [assignedToId, setAssignedToId] = useState('');
+  const [assignedToId, setAssignedToId] = useState('AUTO');
   const [developers, setDevelopers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -47,7 +47,13 @@ export default function SubmitBugModal({ onClose }) {
     }
     setLoading(true);
     try {
-      const res = await createBug({ title, description, severity, assignedToId });
+      const payload = {
+        title,
+        description,
+        severity,
+        assignedToId: assignedToId === 'AUTO' ? null : assignedToId
+      };
+      const res = await createBug(payload);
       setBugId(res.data.id);
       setSubmitted(true);
       setGenerating(true);
@@ -105,7 +111,7 @@ export default function SubmitBugModal({ onClose }) {
         <div className={styles.formGroup}>
           <label>Assign to Developer</label>
           <select value={assignedToId} onChange={(e) => setAssignedToId(e.target.value)} required>
-            <option value="">-- Select --</option>
+            <option value="AUTO">✨ Auto-Assign (AI Recommended)</option>
             {developers.map(d => (
               <option key={d.id} value={d.id}>{d.name} ({d.email})</option>
             ))}

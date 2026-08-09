@@ -94,7 +94,7 @@ class EmailServiceTest {
 
         emailService.sendBugCreatedEmail(sampleBug, developer);
 
-        verify(restTemplate, never()).exchange(anyString(), any(), any(), any());
+        verify(restTemplate, never()).exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), eq(String.class));
     }
 
     @Test

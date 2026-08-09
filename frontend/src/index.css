@@ -1,23 +1,35 @@
 :root {
-  --bg-primary: #08080E;
-  --bg-secondary: #0E0E1A;
-  --bg-card: #141420;
-  --bg-card-hover: #1C1C2E;
-  --bg-sidebar: #0C0C16;
-  --bg-input: #1A1A2E;
-  --border-color: #28283E;
-  --border-light: #3A3A56;
-  --text-primary: #EEEEF6;
-  --text-secondary: #A8A8C8;
-  --text-muted: #6A6A8E;
-  --accent-purple: #7C6CF8;
-  --accent-cyan: #38D9FF;
-  --accent-gradient: linear-gradient(135deg, #7C6CF8, #38D9FF);
-  --shadow-card: 0 8px 32px rgba(0,0,0,0.6);
+  /* Clean Light Mode (Apple / Stripe Aesthetic) */
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #F1F5F9;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-input: #F8FAFC;
+  --border-color: #E2E8F0;
+  --border-light: #CBD5E1;
+  --border-accent: #2563EB;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  
+  /* Stripe / Apple Royal Palette */
+  --accent-purple: #2563EB;
+  --accent-cyan: #0284C7;
+  --accent-mint: #059669;
+  --accent-emerald: #059669;
+  --accent-violet: #6366F1;
+  --accent-rose: #E11D48;
+  --accent-amber: #D97706;
+  
+  --accent-gradient: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #0284C7 100%);
+  --accent-glow: 0 4px 14px rgba(37, 99, 235, 0.2);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.05), 0 10px 25px -5px rgba(15, 23, 42, 0.05);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --font: 'Inter', sans-serif;
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 }
 
 * {
@@ -26,47 +38,58 @@
   box-sizing: border-box;
 }
 
-body {
+body, input, button, select, textarea {
   font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
 }
 
+code, pre {
+  font-family: var(--font-mono);
+}
+
 a {
-  color: var(--accent-cyan);
+  color: var(--accent-purple);
   text-decoration: none;
 }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
-/* Badge styles */
+/* Apple/Stripe Light Badges */
 .badge {
-  display: inline-block;
-  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
 
-.sev-critical { background: rgba(248, 113, 113, 0.15); color: #f87171; }
-.sev-high { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
-.sev-medium { background: rgba(250, 204, 21, 0.15); color: #facc15; }
-.sev-low { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+.sev-critical { background: #FFE4E6; color: #E11D48; border: 1px solid #FECDD3; }
+.sev-high { background: #FEF3C7; color: #D97706; border: 1px solid #FDE68A; }
+.sev-medium { background: #E0F2FE; color: #0284C7; border: 1px solid #BAE6FD; }
+.sev-low { background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; }
 
-.status-open { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
-.status-in_progress { background: rgba(124, 108, 248, 0.15); color: #7c6cf8; }
-.status-resolved { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
-.status-closed { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
-.status-withdrawn { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+.status-open { background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+.status-in_progress { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+.status-resolved { background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; }
+.status-closed { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
+.status-withdrawn { background: #FFE4E6; color: #E11D48; border: 1px solid #FECDD3; }
 
-.role-admin { background: rgba(248, 113, 113, 0.15); color: #f87171; }
-.role-developer { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
-.role-tester { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+.role-admin { background: #FFE4E6; color: #E11D48; border: 1px solid #FECDD3; }
+.role-developer { background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+.role-tester { background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; }
 
 .text-center { text-align: center; }
 .text-muted { color: var(--text-muted); }

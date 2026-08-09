@@ -23,19 +23,36 @@ public class PlaywrightRunnerService {
     private final TestScriptRepository testScriptRepository;
     private final AsyncEmailService asyncEmailService;
 
+    private boolean isDockerAvailable = false;
+
     @PostConstruct
     public void checkRuntime() {
+        // Verify local Node.js
         try {
             Process process = new ProcessBuilder("which", "node").start();
             boolean finished = process.waitFor(5, TimeUnit.SECONDS);
             if (!finished || process.exitValue() != 0) {
-                log.warn("Node.js is not available in PATH. Playwright tests will fail.");
+                log.warn("Node.js is not available in PATH. Local Playwright tests will fail.");
             } else {
                 String path = new String(process.getInputStream().readAllBytes()).trim();
                 log.info("Node.js found at: {}", path);
             }
         } catch (Exception e) {
             log.warn("Could not verify Node.js runtime: {}", e.getMessage());
+        }
+
+        // Verify Docker availability
+        try {
+            Process process = new ProcessBuilder("docker", "info").start();
+            boolean finished = process.waitFor(5, TimeUnit.SECONDS);
+            if (finished && process.exitValue() == 0) {
+                isDockerAvailable = true;
+                log.info("Docker daemon is running. Sandboxed execution enabled.");
+            } else {
+                log.warn("Docker daemon is not running or not available. Running unsandboxed fallback.");
+            }
+        } catch (Exception e) {
+            log.warn("Could not verify Docker runtime: {}", e.getMessage());
         }
     }
 
@@ -54,8 +71,22 @@ public class PlaywrightRunnerService {
 
             log.info("Executing Playwright test for bug: {}", testScript.getBug().getId());
 
-            ProcessBuilder pb = new ProcessBuilder("node", tempFile.toString());
-            pb.directory(tempDir.toFile());
+            ProcessBuilder pb;
+            if (isDockerAvailable) {
+                log.info("Running sandboxed Playwright test inside Docker container.");
+                pb = new ProcessBuilder(
+                        "docker", "run", "--rm",
+                        "--network", "host",
+                        "-v", "/tmp/aibt:/tmp/aibt",
+                        "-w", "/tmp/aibt",
+                        "mcr.microsoft.com/playwright:v1.45.0-jammy",
+                        "node", tempFile.toString()
+                );
+            } else {
+                log.warn("WARNING: Running Playwright test UNSANDBOXED on host system!");
+                pb = new ProcessBuilder("node", tempFile.toString());
+                pb.directory(tempDir.toFile());
+            }
             pb.redirectErrorStream(true);
 
             Process process = pb.start();

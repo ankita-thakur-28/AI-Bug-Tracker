@@ -31,15 +31,36 @@ public class DataSeeder implements CommandLineRunner {
             log.info("Seeded admin user: admin@bugtracker.com / admin123");
         }
 
-        if (!userRepository.existsByEmail("dev@bugtracker.com")) {
-            User dev = User.builder()
-                    .name("Dev User")
-                    .email("dev@bugtracker.com")
+        if (!userRepository.existsByEmail("alice@bugtracker.com")) {
+            User alice = User.builder()
+                    .name("Alice Dev")
+                    .email("alice@bugtracker.com")
                     .password(passwordEncoder.encode("dev123"))
                     .role(Role.DEVELOPER)
                     .build();
-            userRepository.save(dev);
-            log.info("Seeded developer: dev@bugtracker.com / dev123");
+            userRepository.save(alice);
+            log.info("Seeded developer: alice@bugtracker.com / dev123");
+        } else {
+            userRepository.findByEmail("alice@bugtracker.com").ifPresent(u -> {
+                u.setName("Alice Dev");
+                userRepository.save(u);
+            });
+        }
+
+        if (!userRepository.existsByEmail("bob@bugtracker.com")) {
+            User bob = User.builder()
+                    .name("Bob Dev")
+                    .email("bob@bugtracker.com")
+                    .password(passwordEncoder.encode("dev123"))
+                    .role(Role.DEVELOPER)
+                    .build();
+            userRepository.save(bob);
+            log.info("Seeded developer: bob@bugtracker.com / dev123");
+        } else {
+            userRepository.findByEmail("bob@bugtracker.com").ifPresent(u -> {
+                u.setName("Bob Dev");
+                userRepository.save(u);
+            });
         }
     }
 }

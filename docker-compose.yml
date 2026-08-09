@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: aibt_db
-      POSTGRES_USER: aibt_user
-      POSTGRES_PASSWORD: aibt_pass
+      POSTGRES_DB: ${DB_NAME:-aibt_db}
+      POSTGRES_USER: ${DB_USER:-aibt_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -17,11 +17,21 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/aibt_db
-      SPRING_DATASOURCE_USERNAME: aibt_user
-      SPRING_DATASOURCE_PASSWORD: aibt_pass
+      DB_URL: ${DB_URL:-jdbc:postgresql://db:5432/aibt_db}
+      DB_USER: ${DB_USER:-aibt_user}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
-      DEEPSEEK_MODEL: deepseek-v4-pro
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-v4-pro}
+      AI_PROVIDER_URL: ${AI_PROVIDER_URL:-https://api.deepseek.com/chat/completions}
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@aibt.dev}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/aibt:/tmp/aibt
     depends_on:
       - db
 

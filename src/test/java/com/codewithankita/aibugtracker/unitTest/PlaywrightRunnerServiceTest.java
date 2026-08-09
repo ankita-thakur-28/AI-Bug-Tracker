@@ -4,6 +4,7 @@ import com.codewithankita.aibugtracker.Model.Bug;
 import com.codewithankita.aibugtracker.Model.TestScript;
 import com.codewithankita.aibugtracker.Model.TestScriptStatus;
 import com.codewithankita.aibugtracker.repository.TestScriptRepository;
+import com.codewithankita.aibugtracker.service.AsyncEmailService;
 import com.codewithankita.aibugtracker.service.PlaywrightRunnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ class PlaywrightRunnerServiceTest {
     @Mock
     private TestScriptRepository testScriptRepository;
 
+    @Mock
+    private AsyncEmailService asyncEmailService;
+
     @Captor
     private ArgumentCaptor<TestScript> testScriptCaptor;
 
@@ -31,7 +35,7 @@ class PlaywrightRunnerServiceTest {
 
     @BeforeEach
     void setUp() {
-        playwrightRunnerService = new PlaywrightRunnerService(testScriptRepository);
+        playwrightRunnerService = new PlaywrightRunnerService(testScriptRepository, asyncEmailService);
     }
 
     @Test

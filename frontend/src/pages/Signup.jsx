@@ -38,7 +38,7 @@ export default function Signup() {
       <div className={styles.authBox}>
         <div className={styles.logo}>
           <div className={styles.logoIcon}><i className="fas fa-user-plus"></i></div>
-          <h1>BugTracker <span>AI</span></h1>
+          <h1>AI-Bug Tracker</h1>
         </div>
         <p className={styles.subtitle}>Create your tester account</p>
         <form onSubmit={handleSubmit}>

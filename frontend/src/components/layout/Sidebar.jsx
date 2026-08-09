@@ -18,7 +18,7 @@ export default function Sidebar({ role, activeTab, setActiveTab }) {
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
         <div className={styles.icon}><i className="fas fa-bug"></i></div>
-        <h2>BugTracker</h2>
+        <h2>AI-Bug Tracker</h2>
       </div>
       <nav className={styles.nav}>
         {navItems.map(item => (
