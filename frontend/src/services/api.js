@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './tokenManager';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || (window.location.hostname === 'localhost' ? 'http://localhost:8080/api' : 'https://ai-bug-tracker-backend.onrender.com/api'),
   headers: { 'Content-Type': 'application/json' },
 });
 
