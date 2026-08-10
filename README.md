@@ -56,19 +56,6 @@ flowchart TD
 
 ---
 
-## 🔐 Default Seeded Accounts
-
-When the Spring Boot server starts, the database is seeded with default role-based accounts:
-
-| Role | Name | Email | Default Password |
-|---|---|---|---|
-| 🛡️ **ADMIN** | Admin User | `admin@bugtracker.com` | `admin123` |
-| 🎨 **DEVELOPER** | Alice Dev | `alice@bugtracker.com` | `dev123` |
-| ⚙️ **DEVELOPER** | Bob Dev | `bob@bugtracker.com` | `dev123` |
-| 🧪 **TESTER** | Jane Tester | `jane.tester@example.com` | `Password123!` |
-
----
-
 ## 🚀 Local Setup & Installation
 
 ### 1. Prerequisites
@@ -82,17 +69,17 @@ Ensure you have the following installed on your machine:
 
 ```sql
 CREATE DATABASE aibt_db;
-CREATE USER aibt_user WITH PASSWORD 'aibt_pass';
+CREATE USER aibt_user WITH PASSWORD '<YOUR_SECURE_PASSWORD>';
 GRANT ALL PRIVILEGES ON DATABASE aibt_db TO aibt_user;
 ```
 
 ### 3. Environment Variables
-Set your AI API Key in your environment:
+Set your AI API Key and Database Credentials in your environment:
 
 ```bash
-export DEEPSEEK_API_KEY=sk-your-actual-api-key-here
-export DEEPSEEK_MODEL=deepseek-v4-pro        # optional
-export DEEPSEEK_TEMP=0.3                      # optional
+export DEEPSEEK_API_KEY=<YOUR_AI_API_KEY>
+export DB_PASSWORD=<YOUR_SECURE_PASSWORD>
+export JWT_SECRET=<YOUR_JWT_SECRET_KEY>
 ```
 
 ### 4. Playwright Test Engine Setup
