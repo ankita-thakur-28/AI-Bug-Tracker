@@ -62,5 +62,17 @@ public class DataSeeder implements CommandLineRunner {
                 userRepository.save(u);
             });
         }
+
+        if (!userRepository.existsByEmail("jane.tester@example.com")) {
+            User tester = User.builder()
+                    .name("Jane Tester")
+                    .email("jane.tester@example.com")
+                    .password(passwordEncoder.encode("Password123!"))
+                    .role(Role.TESTER)
+                    .phone("+1-555-0199")
+                    .build();
+            userRepository.save(tester);
+            log.info("Seeded tester: jane.tester@example.com / Password123!");
+        }
     }
 }
