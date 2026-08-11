@@ -18,11 +18,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody AuthRequest request) {
+        System.out.println(">>> [AUTH-CONTROLLER] Received Signup Request for Email: " + request.getEmail());
         return ResponseEntity.status(201).body(authService.signup(request));
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody Map<String, String> body) {
+        System.out.println(">>> [AUTH-CONTROLLER] Received Login Request for Email: " + body.get("email"));
         return ResponseEntity.ok(authService.login(
                 body.get("email"),
                 body.get("password")

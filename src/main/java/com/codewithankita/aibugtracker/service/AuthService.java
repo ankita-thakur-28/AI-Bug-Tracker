@@ -38,14 +38,26 @@ public class AuthService {
     }
 
     public AuthResponse login(String email, String password) {
+        System.out.println(">>> [AUTH-SERVICE] Executing DB lookup for Email: " + email);
+        
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> {
+                    System.out.println("❌ >>> [AUTH-SERVICE] FAIL: Email not found in Database: " + email);
+                    return new RuntimeException("Invalid email or password");
+                });
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        System.out.println("✅ >>> [AUTH-SERVICE] User found in DB: " + user.getEmail() + " | Role: " + user.getRole());
+
+        boolean isPasswordValid = passwordEncoder.matches(password, user.getPassword());
+        System.out.println(">>> [AUTH-SERVICE] BCrypt Password Match Result: " + isPasswordValid);
+
+        if (!isPasswordValid) {
+            System.out.println("❌ >>> [AUTH-SERVICE] FAIL: Password mismatch for Email: " + email);
             throw new RuntimeException("Invalid email or password");
         }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        System.out.println("🎉 >>> [AUTH-SERVICE] SUCCESS: JWT Token generated for: " + email);
         return new AuthResponse(token, user.getRole().name(), user.getEmail(), user.getName());
     }
 

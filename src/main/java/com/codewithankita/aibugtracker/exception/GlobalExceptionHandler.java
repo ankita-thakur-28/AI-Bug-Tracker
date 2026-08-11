@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
     // 400 — Business logic errors
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntime(RuntimeException ex) {
+        System.out.println("❌ >>> [EXCEPTION-HANDLER] RuntimeException caught: " + ex.getMessage());
         return ResponseEntity.badRequest().body(Map.of(
                 "status", 400,
                 "error", ex.getMessage(),
