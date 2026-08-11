@@ -4,11 +4,11 @@ import { getToken } from './tokenManager';
 const getBaseURL = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     let url = import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '');
-    return url.endsWith('/api') ? url : url + '/api';
+    return url.replace(/\/api$/, '');
   }
   return window.location.hostname === 'localhost'
-    ? 'http://localhost:8080/api'
-    : 'https://ai-bug-tracker-zbdg.onrender.com/api';
+    ? 'http://localhost:8080'
+    : 'https://ai-bug-tracker-zbdg.onrender.com';
 };
 
 const api = axios.create({
