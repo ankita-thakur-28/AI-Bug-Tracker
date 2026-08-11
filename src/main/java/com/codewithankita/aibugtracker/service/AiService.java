@@ -165,11 +165,20 @@ public class AiService {
             );
 
             String content = extractRecommendationContent(response.getBody());
-            log.info("AI recommended developer UUID: {}", content);
-            return UUID.fromString(content);
+            log.info("AI raw recommendation output: {}", content);
+            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}").matcher(content);
+            if (matcher.find()) {
+                UUID uuid = UUID.fromString(matcher.group());
+                log.info("AI recommended developer UUID extracted: {}", uuid);
+                return uuid;
+            }
+            log.warn("Could not find UUID pattern in AI recommendation output. Using fallback.");
+            if (!developers.isEmpty()) {
+                return developers.get(0).getId();
+            }
+            throw new RuntimeException("AI recommendation output invalid and no developers available");
         } catch (Exception e) {
             log.error("DeepSeek API call for developer recommendation failed: {}", e.getMessage());
-            // Fallback to the first developer in the list
             if (!developers.isEmpty()) {
                 log.info("Falling back to first developer: {}", developers.get(0).getEmail());
                 return developers.get(0).getId();

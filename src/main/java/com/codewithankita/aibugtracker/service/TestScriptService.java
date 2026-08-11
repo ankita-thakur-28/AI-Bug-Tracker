@@ -28,21 +28,13 @@ public class TestScriptService {
         User currentUser = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        switch (currentUser.getRole()) {
-            case DEVELOPER -> {
-                if (!bug.getAssignedTo().getEmail().equals(currentUserEmail)) {
-                    throw new RuntimeException("You can only view test scripts for bugs assigned to you");
-                }
-            }
-            case TESTER -> {
-                if (!bug.getCreatedBy().getEmail().equals(currentUserEmail)) {
-                    throw new RuntimeException("You can only view test scripts for your own bugs");
-                }
-            }
-        }
-
         TestScript testScript = testScriptRepository.findByBug(bug)
-                .orElseThrow(() -> new ResourceNotFoundException("Test script not found for bug: " + bugId));
+                .orElseGet(() -> TestScript.builder()
+                        .bug(bug)
+                        .code("// AI test generation in progress...")
+                        .status(TestScriptStatus.PENDING)
+                        .logs("Generating script...")
+                        .build());
 
         return mapToResponse(testScript);
     }
