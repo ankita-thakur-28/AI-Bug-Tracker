@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class SafeTextValidator implements ConstraintValidator<SafeText, String> {
 
     private static final Pattern UNSAFE_PATTERN = Pattern.compile(
-            "<[^>]*>|javascript:|on\\w+=|'\\s*OR\\s*'|'\\s*--|DROP\\s+|DELETE\\s+|INSERT\\s+|EXEC\\s+|UNION\\s+",
+            "<script[^>]*>|<iframe[^>]*>|javascript:|on\\w+\\s*=",
             Pattern.CASE_INSENSITIVE
     );
 
