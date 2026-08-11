@@ -49,10 +49,10 @@ public class PlaywrightRunnerService {
                 isDockerAvailable = true;
                 log.info("Docker daemon is running. Sandboxed execution enabled.");
             } else {
-                log.warn("Docker daemon is not running or not available. Running unsandboxed fallback.");
+                log.info("Docker daemon not detected. Using direct host Playwright runner mode.");
             }
         } catch (Exception e) {
-            log.warn("Could not verify Docker runtime: {}", e.getMessage());
+            log.info("Could not verify Docker runtime: {}", e.getMessage());
         }
     }
 
